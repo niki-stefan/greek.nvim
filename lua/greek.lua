@@ -47,6 +47,17 @@ local shorthands = {
 	z = "zeta",
 }
 
+local diacritics = {
+	grave = "\u{0300}",
+	acute = "\u{0301}",
+	macron = "\u{0304}",
+	diaeresis = "\u{0308}",
+	smooth_breathing = "\u{0313}",
+	rough_breathing = "\u{0314}",
+	circumflex = "\u{0342}",
+	subscript = "\u{0345}",
+}
+
 function M.hide()
 	if M.ns_id ~= nil then
 		vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
@@ -82,7 +93,12 @@ end
 
 function M.conceal()
 	-- Note: vim regex requires + to be \+, which i dont really get why...
-	local regex = vim.regex("gr\\[\\w\\+\\]")
+	-- Fix: add \\v at the start to enable very magic mode...?
+	-- According to ':help magic':
+	--   Use of "\v" means that after it, all ASCII characters except '0'-'9', 'a'-'z',
+	--   'A'-'Z' and '_' have special meaning: "very magic"
+
+	local regex = vim.regex("\\vgr\\[\\w+(:['`\\.~,;_-]+)?\\]")
 
 	-- arguments: buffer (0 means current buffer), start_line, end_line (-1 means the last line), strict_checking
 	-- [https://neovim.io/doc/user/api/#nvim_buf_get_lines()]
@@ -102,8 +118,37 @@ function M.conceal()
 			start_col = start_col + offset - 1
 			end_col = end_col + offset - 1
 
-			-- Remove gr[ and ], keeping only the letter name
+			local colon_index = line:sub(start_col + 1, end_col):find(":")
+
 			local letter = line:sub(start_col + 4, end_col - 1)
+
+			local accents = {}
+
+			if colon_index ~= nil then
+				letter = line:sub(start_col + 4, start_col + colon_index - 1)
+
+				for j = start_col + colon_index + 1, end_col - 1 do
+					local char = line:sub(j, j)
+
+					if char == "'" then
+						table.insert(accents, diacritics.acute)
+					elseif char == "`" then
+						table.insert(accents, diacritics.grave)
+					elseif char == "~" then
+						table.insert(accents, diacritics.circumflex)
+					elseif char == "." then
+						table.insert(accents, diacritics.diaeresis)
+					elseif char == "," then
+						table.insert(accents, diacritics.smooth_breathing)
+					elseif char == ";" then
+						table.insert(accents, diacritics.rough_breathing)
+					elseif char == "_" then
+						table.insert(accents, diacritics.subscript)
+					elseif char == "-" then
+						table.insert(accents, diacritics.macron)
+					end
+				end
+			end
 
 			if shorthands[letter:lower()] ~= nil then
 				local letter_name = shorthands[letter:lower()]
@@ -125,8 +170,14 @@ function M.conceal()
 					is_uppercase = 1
 				end
 
+				local unicode_letter = letters[letter:lower()][is_uppercase]
+
+				for _, accent in ipairs(accents) do
+					unicode_letter = unicode_letter .. accent
+				end
+
 				local opts = {
-					conceal = letters[letter:lower()][is_uppercase],
+					conceal = unicode_letter,
 					end_col = end_col,
 					hl_group = M.opts.hl_group,
 				}
@@ -149,12 +200,6 @@ function M.setup(opts)
 	}
 
 	M.ns_id = vim.api.nvim_create_namespace("greek.nvim")
-
-	vim.api.nvim_buf_attach(0, false, {
-		on_lines = function(_, _, _, first_line)
-			M.conceal()
-		end,
-	})
 
 	M.init_autocmd()
 
