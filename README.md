@@ -27,8 +27,11 @@ The plugin can be invoked in any file other than the ones in files_pattern, by m
 
 The syntax is `gr[LETTER_NAME]` where `LETTER_NAME` is the [english name](https://en.wikipedia.org/wiki/Greek_alphabet) of the letter. While editing the line the original text will show. You can also use shorthands (for example: `a` for `alpha`), the letters names and their shorthands can be found in [lua/greek.lua](https://github.com/niki-stefan/greek.nvim/blob/main/lua/greek.lua).
 
-For example, to write Kirye, eleison (Lord, have mercy) [but without diacritics for the moment]:
+For example, to write "Kirye, eleison" (Lord, have mercy) [but without diacritics for the moment]:
 
 ```
 gr[K]gr[n]gr[r]gr[i]gr[e], gr[e]gr[l]gr[e]gr[eta]gr[s]gr[o]gr[nu].
 ```
+
+<img width="251" height="112" alt="screen_2026-11-21_13-15-30" src="https://github.com/user-attachments/assets/4bc74780-ce2c-4076-b7ba-b87ba487536b" />
+
