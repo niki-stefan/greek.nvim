@@ -27,6 +27,26 @@ local letters = {
 	omega = { "Ω", "ω" },
 }
 
+local shorthands = {
+	a = "alpha",
+	b = "beta",
+	r = "rho",
+	p = "pi",
+	d = "delta",
+	t = "tau",
+	w = "omega",
+	e = "epsilon",
+	i = "iota",
+	o = "omicron",
+	s = "sigma",
+	f = "phi",
+	k = "kappa",
+	l = "lambda",
+	x = "chi",
+	n = "upsilon",
+	z = "zeta",
+}
+
 function M.hide()
 	if M.ns_id ~= nil then
 		vim.api.nvim_buf_clear_namespace(0, M.ns_id, 0, -1)
@@ -62,7 +82,7 @@ end
 
 function M.conceal()
 	-- Note: vim regex requires + to be \+, which i dont really get why...
-	local regex = vim.regex("greek\\[\\w\\+\\]")
+	local regex = vim.regex("gr\\[\\w\\+\\]")
 
 	-- arguments: buffer (0 means current buffer), start_line, end_line (-1 means the last line), strict_checking
 	-- [https://neovim.io/doc/user/api/#nvim_buf_get_lines()]
@@ -82,8 +102,19 @@ function M.conceal()
 			start_col = start_col + offset - 1
 			end_col = end_col + offset - 1
 
-			-- Remove greek[ and ], keeping only the letter name
-			local letter = line:sub(start_col + 7, end_col - 1)
+			-- Remove gr[ and ], keeping only the letter name
+			local letter = line:sub(start_col + 4, end_col - 1)
+
+			if shorthands[letter:lower()] ~= nil then
+				local letter_name = shorthands[letter:lower()]
+
+				if letter:match("%u") then
+					-- Capitalize first letter
+					letter = letter_name:sub(1, 1):upper() .. letter_name:sub(2)
+				else
+					letter = letter_name
+				end
+			end
 
 			if letters[letter:lower()] ~= nil then
 				-- 1 means it is, 2 means it is not
@@ -97,6 +128,7 @@ function M.conceal()
 				local opts = {
 					conceal = letters[letter:lower()][is_uppercase],
 					end_col = end_col,
+					hl_group = M.opts.hl_group,
 				}
 
 				-- ipairs(lines) starts i from 1, but nvim_buf_set_extmark wants 0-based indexes
@@ -113,6 +145,7 @@ function M.setup(opts)
 
 	M.opts = {
 		files_pattern = opts.files_pattern or "*",
+		hl_group = opts.hl_group or "Exception",
 	}
 
 	M.ns_id = vim.api.nvim_create_namespace("greek.nvim")
