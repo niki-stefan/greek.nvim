@@ -33,8 +33,17 @@ For example, to write "Kirye, eleison" (Lord, have mercy):
 gr[K]gr[n:']gr[r]gr[i]gr[e], gr[e:,]gr[l]gr[e:']gr[eta]gr[s]gr[o]gr[nu].
 ```
 
+<img width="391" height="175" alt="screen_2026-11-21_15-36-03" src="https://github.com/user-attachments/assets/e5bbef4d-c40b-4f13-bc53-c5f37b9bb775" />
+
+
 ## Diacritics
 
 Supported diacritics are [grave](https://en.wikipedia.org/wiki/Grave_accent) (\`), [acute](https://en.wikipedia.org/wiki/Acute_accent) ('), [macron](https://en.wikipedia.org/wiki/Macron_(diacritic)) (-), [diaeresis](https://en.wikipedia.org/wiki/Diaeresis_(diacritic)) (.), [smooth breathing](https://en.wikipedia.org/wiki/Smooth_breathing) (,), [rough breathing](https://en.wikipedia.org/wiki/Rough_breathing) (;), [circumflex](https://en.wikipedia.org/wiki/Circumflex) (~), [subscript](https://en.wikipedia.org/wiki/Iota_subscript) (\_).
 
 They *must* be preceeded by a semicolon. To combine multiple diacritics simply write them one after another: `gr[eta:,_]`.
+
+```
+gr[a:`] gr[a:'] gr[a:-] gr[a:.] gr[a:,] gr[a:;] gr[a:~] gr[a:_]
+```
+
+<img width="496" height="80" alt="screen_2026-11-21_15-29-53" src="https://github.com/user-attachments/assets/64afea67-e718-4a6c-9e9d-bf459f1a494c" />
