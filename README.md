@@ -21,7 +21,7 @@ require("greek").setup({
 })
 ```
 
-The plugin can be invoked in any file other than the ones in [files_pattern](https://neovim.io/doc/user/api/#nvim_create_autocmd()), by mannually calling `ConcealGreek`. By calling `HideGreek`, you can temporarly hide the ext_marks, until InsertLeave fires.
+The plugin can be invoked in any file other than the ones in [files_pattern](https://neovim.io/doc/user/api/#nvim_create_autocmd()), by mannually calling `ConcealGreek`. By calling `HideGreek`, you can temporarly hide the ext_marks, until InsertLeave fires. By calling `ApplyGreek`, it will write in the line below the unicode characters.
 
 ## Syntax
 
